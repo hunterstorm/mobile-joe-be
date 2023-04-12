@@ -1,4 +1,4 @@
-// RecipeIngredients controller logic and functionality
+// OBM controller logic and functionality
 
 //imports
 const express = require('express');
