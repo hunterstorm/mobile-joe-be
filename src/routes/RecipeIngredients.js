@@ -18,6 +18,25 @@ router.get('/',(req,res)=>{
     })
 })
 
+// get recipes with ingredient by ingredient ID
+router.get('/ingredient/:ingredient_id', (req,res)=>{
+  const id = req.params.ingredient_id
+
+  Ingredient.findByPk(id, {
+    include:[{
+      model: Recipe,
+      through: RecipeIngredient,
+      attributes: [ 'recipeName', 'recipeType','ingredientList','user_id' ]
+    }]
+  })
+  .then (ingredient => {
+    if (!ingredient) {
+      return res.status(404).json({ error: 'Ingredient not found' });
+    }
+    res.status(200).json(ingredient.recipes);
+  })
+})
+
 // get recipe ingredients by recipe ID
 router.get('/recipe/:recipe_id', (req, res) => {
     const id = req.params.recipe_id;

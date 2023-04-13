@@ -17,6 +17,31 @@ router.get('/',(req,res)=>{
     })
 })
 
+//get ingredient by id
+router.get('/:ingredient_id', (req,res)=>{
+    const id = req.params.ingredient_id;
+    Ingredient.findByPk(id).then(ingredient => {
+        if (!ingredient) {
+            return res.status(404).json({ error: 'Ingredient not found' });
+        }
+        res.status(200).json(ingredient);    
+    })
+})
+
+//get ingredient by name
+router.get('/name/:ingredient_name', (req,res)=>{
+    const ingredientName = req.params.ingredient_name;
+    Ingredient.findAll({ where: { ingredient_name: ingredientName } })
+    .then(recipes =>{
+        if(!recipes) {
+            return res.status(404).json({ error: 'Ingredient not found' });
+        }
+        res.status(200).json(recipes);
+    })
+})
+
+//get ingredient by type
+
 //post new ingredient
 router.post('/',(req,res)=>{
 

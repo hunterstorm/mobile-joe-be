@@ -17,6 +17,38 @@ router.get('/',(req,res)=>{
     })
 })
 
+//get recipe by id
+router.get('/id/:recipe_id', (req,res)=>{
+    const id = req.params.recipe_id;
+    Recipe.findByPk(id).then(recipe => {
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        res.status(200).json(recipe);
+    })
+})
+
+// GET /recipes
+router.get('/', (req, res) => {
+    const { name, type, user } = req.query;
+    const where = {};
+    if (name) where.recipe_name = name;
+    if (type) where.recipe_type = type;
+    if (user) where.user_id = user;
+    Recipe.findAll({ where })
+      .then(recipes => {
+        if (recipes.length === 0) {
+          return res.status(404).json({ error: 'No recipes found' });
+        }
+        res.status(200).json(recipes);
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
+  });
+
+  
 // post a recipe 
 router.post('/', [
     // check validation
@@ -41,15 +73,15 @@ router.post('/', [
         user_id: recipeData.userId
     }).then(recipe => {
         
-            //ingredient inventory validation
-            const ingredients = recipeData.ingredientList.map(id =>Ingredient.findByPk(id));
-            Promise.all(ingredients).then(ingredientInstances => {
-                recipe.setIngredients(ingredientInstances).then(() => {
-                    res.status(201).send("Recipe created successfully");
-                }).catch(error => {
-                    res.status(500).send(`Error creating recipe: ${error.message}`);
-                });         
-            });
+        //ingredient inventory validation
+        const ingredients = recipeData.ingredientList.map(id =>Ingredient.findByPk(id));
+        Promise.all(ingredients).then(ingredientInstances => {
+            recipe.setIngredients(ingredientInstances).then(() => {
+                res.status(201).send("Recipe created successfully");
+            }).catch(error => {
+                res.status(500).send(`Error creating recipe: ${error.message}`);
+            });         
+        });
             res.status(201).send("Recipe created successfully");
     }).catch(error => {
         res.status(500).send(`Error creating recipe: ${error.message}`);
