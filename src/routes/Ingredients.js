@@ -18,7 +18,7 @@ router.get('/',(req,res)=>{
 })
 
 //get ingredient by id
-router.get('/:ingredient_id', (req,res)=>{
+router.get('/id/:ingredient_id', (req,res)=>{
     const id = req.params.ingredient_id;
     Ingredient.findByPk(id).then(ingredient => {
         if (!ingredient) {
@@ -28,19 +28,30 @@ router.get('/:ingredient_id', (req,res)=>{
     })
 })
 
-//get ingredient by name
+//get ingredients by name
 router.get('/name/:ingredient_name', (req,res)=>{
     const ingredientName = req.params.ingredient_name;
     Ingredient.findAll({ where: { ingredient_name: ingredientName } })
-    .then(recipes =>{
-        if(!recipes) {
+    .then(ingredient =>{
+        if(!ingredient) {
             return res.status(404).json({ error: 'Ingredient not found' });
         }
-        res.status(200).json(recipes);
+        res.status(200).json(ingredient);
     })
 })
 
-//get ingredient by type
+//get ingredients by type
+router.get('/type/:ingredient_type', (req,res)=>{
+    const ingredientType = req.params.ingredient_type;
+    Ingredient.findAll({ where: { ingredient_type: ingredientType } })
+    .then(ingredient =>{
+        if(!ingredient) {
+            return res.status(404).json({ error: 'Ingredient not found' });
+        }
+        res.status(200).json(ingredient);
+    });
+});
+
 
 //post new ingredient
 router.post('/',(req,res)=>{
@@ -63,6 +74,26 @@ router.post('/',(req,res)=>{
     });
 
 })
+
+//update recipe by id
+router.put('/id/:ingredient_id', (req,res)=>{
+    const id = req.params.ingredient_id;
+
+    Ingredient.findByPk(id).then(ingredient =>{
+    
+            const ingredientData = req.body;
+            Ingredient.update({
+                ingredientName: ingredientData.ingredientName,
+                ingredientType: ingredientData.ingredientType
+               },{
+                where:{ingredient_id:id}
+               })
+               if(!ingredient) {
+                return res.status(404).json({ error: 'Ingredient not found' });
+            }
+            res.status(200).send('Ingredient updated successfully');
+        })
+    })
 
 
 //export

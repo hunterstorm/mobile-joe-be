@@ -28,27 +28,43 @@ router.get('/id/:recipe_id', (req,res)=>{
     })
 })
 
-// GET /recipes
-router.get('/', (req, res) => {
-    const { name, type, user } = req.query;
-    const where = {};
-    if (name) where.recipe_name = name;
-    if (type) where.recipe_type = type;
-    if (user) where.user_id = user;
-    Recipe.findAll({ where })
-      .then(recipes => {
-        if (recipes.length === 0) {
-          return res.status(404).json({ error: 'No recipes found' });
+//get recipes by name
+router.get('/name/:recipe_name', (req,res)=>{
+    const recipeName = req.params.recipe_name;
+    Recipe.findAll({ where: { recipe_name: recipeName } })
+    .then(recipes =>{
+        if(!recipes) {
+            return res.status(404).json({ error: 'No Recipes found' });
         }
         res.status(200).json(recipes);
-      })
-      .catch(error => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
-  });
+    
+    })
+})
 
-  
+//get recipes by type
+router.get('/type/:recipe_type', (req,res)=>{
+    const recipeType = req.params.recipe_type;
+    Recipe.findAll({ where: { recipe_type: recipeType } })
+    .then(recipes =>{
+        if(!recipes) {
+            return res.status(404).json({ error: 'No Recipes Found' });
+        }
+        res.status(200).json(recipes);
+    })
+})
+
+//get recipes by user
+router.get('/user/:user_id', (req,res)=>{
+    const user = req.params.user_id;
+    Recipe.findAll({ where: { user_id: user} })
+        .then(recipes =>{
+            if(!recipes) {
+                return res.status(404).json({ error: 'No Recipes Found' });
+            }
+            res.status(200).json(recipes);
+        })
+})
+
 // post a recipe 
 router.post('/', [
     // check validation
@@ -63,7 +79,6 @@ router.post('/', [
             errors: errors.array()
           });
     }
-
     // creating a new recipe in db
     const recipeData = req.body;
     Recipe.create({ 
@@ -72,7 +87,6 @@ router.post('/', [
         ingredientList: recipeData.ingredientList,
         user_id: recipeData.userId
     }).then(recipe => {
-        
         //ingredient inventory validation
         const ingredients = recipeData.ingredientList.map(id =>Ingredient.findByPk(id));
         Promise.all(ingredients).then(ingredientInstances => {
@@ -87,6 +101,27 @@ router.post('/', [
         res.status(500).send(`Error creating recipe: ${error.message}`);
     });
 });
+
+//update recipe by id
+router.put('/id/:recipe_id', (req,res)=>{
+    const id = req.params.recipe_id;
+
+    Recipe.findByPk(id).then(recipe =>{
+    
+            const recipeData = req.body;
+            Recipe.update({
+                recipeName: recipeData.recipeName,
+                recipeType: recipeData.recipeType,
+                ingredientList: recipeData.ingredientList
+               },{
+                where:{recipe_id:id}
+               })
+               if(!recipe) {
+                return res.status(404).json({ error: 'No Recipes Found' });
+            }
+            res.status(200).send('Recipe updated successfully');
+        })
+    })
 
 //export
 module.exports = router;

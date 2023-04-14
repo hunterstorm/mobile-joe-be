@@ -46,9 +46,32 @@ router.get('/',(req,res)=>{
     })
 })
 
-//post new User
+//get user by id
+router.get('/id/:user_id', (req,res)=>{
+    const id= req.params.user_id
+    findByPk(id).then(user=>{
+        if(!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json(user);
+    })
+})
+
+//get user by username
+router.get('/username/:username', (req,res)=>{
+    const username=req.params.username
+    findOne({ where: { username:username } })
+    .then(user=>{
+        if(!user) {
+            return res.status(404).json({ error: 'Username not found '});
+        }
+        res.status(200).json(user);
+    })
+})
+
+//post new user
 router.post('/', [
-    //requires the username to be between 4 and 20 characters long, and contain only letters, numbers, underscores, and hyphens or exists in database
+    //requires the username to be between 4 and 20 characters long, and contain only letters, numbers, underscores, and hyphens or does not exist in database
     check('username')
         .notEmpty()
         .matches(/^[a-zA-Z0-9_-]{4,20}$/)
@@ -97,6 +120,27 @@ router.post('/', [
         res.status(500).send(`Error creating user: ${error.message}`);
     });
 });
+
+//update user by id
+router.put('/id/:user_id', (req,res)=>{
+    const id = req.params.user_id;
+    User.findByPk(id).then(user =>{
+        const userData = req.body;
+        User.update({
+            username: userData.username,
+            email: userData.email,
+            password: userData.password,
+            firstName: userData.firstName,
+            lastName: userData.lastName
+        },{
+            where: { user_id:id }
+        })
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).send('User update successful');
+    })
+})
 
 
 //export
