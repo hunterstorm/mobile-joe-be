@@ -6,6 +6,16 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator');
 const Recipe = require('../models/Recipe');
 const Ingredient = require('../models/Ingredient');
+const User = require('../models/User');
+
+
+function linkIngredients(recipeData, recipe) {
+    //ingredient inventory validation
+    const ingredients = recipeData.ingredientList.map(id =>Ingredient.findByPk(id));
+    return Promise.all(ingredients).then(ingredientInstances => {
+        recipe.setIngredients(ingredientInstances)
+    })
+}
 
 // get all recipes
 router.get('/',(req,res)=>{
@@ -54,9 +64,9 @@ router.get('/type/:recipe_type', (req,res)=>{
 })
 
 //get recipes by user
-router.get('/user/:user_id', (req,res)=>{
-    const user = req.params.user_id;
-    Recipe.findAll({ where: { user_id: user} })
+router.get('/owner/:owner', (req,res)=>{
+    const user = req.params.owner;
+    Recipe.findAll({ where: { owner: user} })
         .then(recipes =>{
             if(!recipes) {
                 return res.status(404).json({ error: 'No Recipes Found' });
@@ -70,7 +80,7 @@ router.post('/', [
     // check validation
     check('recipeName').notEmpty(),
     check('recipeType').notEmpty(),
-    check('ingredientList').notEmpty()
+    check('owner').notEmpty()
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -81,24 +91,26 @@ router.post('/', [
     }
     // creating a new recipe in db
     const recipeData = req.body;
-    Recipe.create({ 
-        recipeName: recipeData.recipeName,
-        recipeType: recipeData.recipeType,
-        ingredientList: recipeData.ingredientList,
-        user_id: recipeData.userId
-    }).then(recipe => {
-        //ingredient inventory validation
-        const ingredients = recipeData.ingredientList.map(id =>Ingredient.findByPk(id));
-        Promise.all(ingredients).then(ingredientInstances => {
-            recipe.setIngredients(ingredientInstances).then(() => {
-                res.status(201).send("Recipe created successfully");
-            }).catch(error => {
-                res.status(500).send(`Error creating recipe: ${error.message}`);
-            });         
-        });
-            res.status(201).send("Recipe created successfully");
+
+    User.findByPk(recipeData.owner).then(user=>{
+        if (user){
+            Recipe.create({ 
+                recipeName: recipeData.recipeName,
+                recipeType: recipeData.recipeType,
+                owner: recipeData.owner,
+                description: recipeData.description
+            }).then(recipe => {
+                linkIngredients(recipeData, recipe).then(() => {
+                    res.status(201).send("Recipe created successfully");
+                }).catch(error => {
+                    res.status(500).send(`Error creating recipe: ${error.message}`);
+                });   
+            })      
+        }else{
+            res.status(404).json({ error: 'User not found' });
+        }
     }).catch(error => {
-        res.status(500).send(`Error creating recipe: ${error.message}`);
+        res.status(500).send(`Error creating recipe: ${error.message}`);    
     });
 });
 
@@ -107,19 +119,49 @@ router.put('/id/:recipe_id', (req,res)=>{
     const id = req.params.recipe_id;
 
     Recipe.findByPk(id).then(recipe =>{
-    
-            const recipeData = req.body;
-            Recipe.update({
-                recipeName: recipeData.recipeName,
-                recipeType: recipeData.recipeType,
-                ingredientList: recipeData.ingredientList
-               },{
-                where:{recipe_id:id}
-               })
-               if(!recipe) {
+
+        const recipeData = req.body;
+
+        Recipe.update({
+            recipeName: recipeData.recipeName,
+            recipeType: recipeData.recipeType,
+            ingredientList: recipeData.ingredientList,
+            description: recipeData.description,
+            owner: recipeData.owner
+        },{
+            where:{recipe_id:id}
+        })
+        .then(() => {
+            if(!recipe) {
                 return res.status(404).json({ error: 'No Recipes Found' });
+            } else { 
+                if (recipeData.ingredientList && recipeData.ingredientList.length > 0){
+                    linkIngredients(recipeData, recipe).then(() => {
+                        res.status(201).send("Recipe updated successfully");
+                    }).catch(error => {
+                        res.status(500).send(`Error updating recipe: ${error.message}`);
+                    })
+                } else {
+                    res.status(201).send("Recipe updated successfully");
+                }
             }
-            res.status(200).send('Recipe updated successfully');
+        })
+        .catch(error =>{
+            res.status(500).send(`Error updating recipe: ${error.message}`);
+        })
+    })
+})
+
+    router.delete('/id/:recipe_id',(req,res)=>{
+        const id = req.params.recipe_id;
+        Recipe.findByPk(id).then((ingredient)=>{
+            Recipe.destroy({
+                where:{ recipe_id:id }
+            })
+            if (!ingredient) {
+                return res.status (404).json ({ error: 'Recipe not found' });
+            }
+            res.status(200).send('Recipe deleted successfully');
         })
     })
 

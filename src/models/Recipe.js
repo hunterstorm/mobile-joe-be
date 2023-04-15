@@ -19,11 +19,10 @@ const Recipe = sequelize.define("recipes",{
         type: DataTypes.STRING,
         field: 'recipe_type'
     },
-    ingredientList: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
-        field: 'ingredients'
-    }
-
+    description: {
+        type: DataTypes.TEXT,
+        field: 'description'
+      }
 })
 
 module.exports = Recipe;

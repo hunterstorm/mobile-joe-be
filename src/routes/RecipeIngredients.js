@@ -26,7 +26,7 @@ router.get('/ingredient/:ingredient_id', (req,res)=>{
     include:[{
       model: Recipe,
       through: RecipeIngredient,
-      attributes: [ 'recipeName', 'recipeType','ingredientList','user_id' ]
+      attributes: [ 'recipeName', 'recipeType', 'description', 'owner' ]
     }]
   })
   .then (ingredient => {

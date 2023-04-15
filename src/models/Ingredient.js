@@ -5,7 +5,7 @@ const sequelize = require('../sequelizeConnection');
 
 const Ingredient = sequelize.define("ingredients",{
     
-    ingredientId: { 
+    ingredientId: {
         type: DataTypes.INTEGER,
         field: 'ingredient_id',
         primaryKey: true,

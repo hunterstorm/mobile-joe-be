@@ -8,7 +8,7 @@ const sequelize = require('./sequelizeConnection');
 const cors = require('cors');
 
 // router variables
-const userRoute = require ('./routes/User');
+const userRoute = require ('./routes/Users');
 const recipeRoute = require ('./routes/Recipes');
 const ingredientRoute = require ('./routes/Ingredients');
 const recipeIngredientRoute = require ('./routes/RecipeIngredients');
@@ -31,10 +31,10 @@ app.use('/RecipeIngredients', recipeIngredientRoute);
 
 // table associations
 User.hasMany(Recipe,{
-    foreignKey: 'user_id'
+    foreignKey: 'owner'
 });
 Recipe.belongsTo(User, {
-    foreignKey: 'user_id'
+    foreignKey: 'owner'
 });
 
 Recipe.belongsToMany(Ingredient, {

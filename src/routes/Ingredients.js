@@ -31,7 +31,7 @@ router.get('/id/:ingredient_id', (req,res)=>{
 //get ingredients by name
 router.get('/name/:ingredient_name', (req,res)=>{
     const ingredientName = req.params.ingredient_name;
-    Ingredient.findAll({ where: { ingredient_name: ingredientName } })
+    Ingredient.findOne({ where: { ingredient_name: ingredientName } })
     .then(ingredient =>{
         if(!ingredient) {
             return res.status(404).json({ error: 'Ingredient not found' });
@@ -53,27 +53,34 @@ router.get('/type/:ingredient_type', (req,res)=>{
 });
 
 
-//post new ingredient
 router.post('/',(req,res)=>{
 
-    const recipeData = req.body;
-    Ingredient.create({ 
-        ingredientName: recipeData.ingredientName,
-        ingredientType: recipeData.ingredientType,
-        ingredientList: recipeData.ingredientList,   
-    }).then(ingredient => {
-        if (recipeData.recipes && recipeData.recipes.length > 0) {
-            ingredient.setRecipes(recipeData.recipes).then(() => {
-                res.status(201).send("Ingredient created successfully");
-            });
-        } else {
-            res.status(201).send("Ingredient created successfully");
-        }
-    }).catch(error => {
-        res.status(500).send(`Error creating ingredient: ${error.message}`);
-    });
+    const ingredientData = req.body;
+    Ingredient.findOne({ where: { ingredientName: ingredientData.ingredientName } })
+    .then(exists =>{
+        if(exists){
+            res.status(404).send(`Ingredient '${ingredientData.ingredientName}' already exists`);
+        }else{
 
-})
+            Ingredient.create({ 
+            ingredientName: ingredientData.ingredientName,
+            ingredientType: ingredientData.ingredientType 
+            }).then(ingredient => {
+                if (ingredientData.recipes && ingredientData.recipes.length > 0) {
+                    ingredient.setRecipes(ingredientData.recipes).then(() => {
+                        res.status(201).send(`Ingredient '${ingredientData.ingredientName}' created successfully`);
+                    });
+                } else {
+                    res.status(201).send("Ingredient created successfully");
+                }
+            }).catch(error => {
+                res.status(500).send(`Error creating ingredient: ${error.message}`);
+            });
+        } 
+    }).catch(error => {
+        res.status(500).send(`Error finding ingredient: ${error.message}`);
+    });
+});
 
 //update recipe by id
 router.put('/id/:ingredient_id', (req,res)=>{
@@ -94,6 +101,20 @@ router.put('/id/:ingredient_id', (req,res)=>{
             res.status(200).send('Ingredient updated successfully');
         })
     })
+
+    router.delete('/id/:ingredient_id',(req,res)=>{
+    const id=req.params.ingredient_id;
+    Ingredient.findByPk(id).then((ingredient)=>{
+            Ingredient.destroy({
+                where:{ingredient_id:id}
+            })
+            if (!ingredient) {
+                return res.status(404).json({ error: 'Ingredient not found' });
+            }
+            res.status(200).send('Ingredient deleted successfully');
+
+    })
+})
 
 
 //export
