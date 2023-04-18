@@ -22,7 +22,11 @@ const Recipe = sequelize.define("recipes",{
     description: {
         type: DataTypes.TEXT,
         field: 'description'
-      }
+    }
+    // favorites: {
+    //     type: DataTypes.ARRAY(DataTypes.INTEGER),
+    //     defaultValue: []
+    // }
 })
 
 module.exports = Recipe;

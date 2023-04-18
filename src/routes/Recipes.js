@@ -98,7 +98,8 @@ router.post('/', [
                 recipeName: recipeData.recipeName,
                 recipeType: recipeData.recipeType,
                 owner: recipeData.owner,
-                description: recipeData.description
+                description: recipeData.description,    
+                favorite: recipeData.favorites
             }).then(recipe => {
                 linkIngredients(recipeData, recipe).then(() => {
                     res.status(201).send("Recipe created successfully");
@@ -107,7 +108,7 @@ router.post('/', [
                 });   
             })      
         }else{
-            res.status(404).json({ error: 'User not found' });
+            res.status(422).json({ error: 'User not found' });
         }
     }).catch(error => {
         res.status(500).send(`Error creating recipe: ${error.message}`);    
@@ -127,7 +128,8 @@ router.put('/id/:recipe_id', (req,res)=>{
             recipeType: recipeData.recipeType,
             ingredientList: recipeData.ingredientList,
             description: recipeData.description,
-            owner: recipeData.owner
+            owner: recipeData.owner,
+            favorites: recipeData.favorites
         },{
             where:{recipe_id:id}
         })
@@ -151,6 +153,13 @@ router.put('/id/:recipe_id', (req,res)=>{
         })
     })
 })
+
+// // favorite recipe
+// router.put('/favorite/:id', async (req, res) => {
+//     const recipe = await Recipe.findByPk(req.params.id);
+//     recipe.update({ favorites: true });
+//     res.json(recipe);
+//   });
 
     router.delete('/id/:recipe_id',(req,res)=>{
         const id = req.params.recipe_id;

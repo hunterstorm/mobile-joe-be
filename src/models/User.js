@@ -27,6 +27,10 @@ const User = sequelize.define('user', {
     lastName: {
         type: DataTypes.STRING
     }
+    // favorites: {
+    //     type: DataTypes.ARRAY(DataTypes.INTEGER),
+    //     defaultValue: []
+    // }
 
   });
 
