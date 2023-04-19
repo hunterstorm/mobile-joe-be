@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 
 
-const sequelizeConnection = new Sequelize('postgres://hunterstorm:DigitalCrafts@cloud-database-instance.ccpqgrq3czty.us-west-2.rds.amazonaws.com:5432/cloud_database', {
+const sequelizeConnection = new Sequelize('postgres://xkkxqfpm:lBxWM6iC919vFi4JGsrKMBHTm_cShepI@otto.db.elephantsql.com:5432/xkkxqfpm', {
   define: {
    
     timestamps: false,
