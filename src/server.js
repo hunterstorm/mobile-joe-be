@@ -77,6 +77,6 @@ sequelize.sync().then(()=>{
 })
 
 const server = http.createServer(app);
-server.listen(443,'https://mellow-pudding-3736e5.netlify.app',()=>{
+server.listen(443 || 80,'https://mellow-pudding-3736e5.netlify.app',()=>{
     console.log('server started');
 })
