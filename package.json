@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "mkdir -p build && cp -r src/* build/ && cp package.json build/ && cd build && npm install"
   },
   "keywords": [],
   "author": "",
