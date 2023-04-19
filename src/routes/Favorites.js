@@ -18,7 +18,7 @@ router.get('/user/:userId', async (req, res) => {
       through: {
         model: Favorite
       },
-      attributes:[ 'recipeName', 'recipeType', 'description', 'owner']
+      attributes:[ 'recipeName', 'recipeType', 'description', 'owner','recipeId']
     });
 
     res.json(favorites);
@@ -38,7 +38,7 @@ router.get('/recipe/:recipeId', async (req, res) => {
     }
 
     const favorites = await recipe.getUsers({
-      attributes: ['user_id','username','firstName','lastName']
+      attributes: ['userId','username','firstName','lastName']
     });
     res.json(favorites);
   } catch (error) {
@@ -73,7 +73,51 @@ router.put('/user/:userId/recipe/:recipeId', async (req, res) => {
       recipe_id: recipe.recipeId
     });
 
-    res.json({ message: 'Recipe added to favorites' });
+    await user.addRecipe(recipe); 
+
+    res.json({ message: 'Recipe added to favorites' }); 
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.delete('/user/:userId/recipe/:recipeId', async (req, res) => {
+  const userId = req.params.userId;
+  const recipeId = req.params.recipeId;
+
+  try {
+    const user = await User.findByPk(userId);
+    const recipe = await Recipe.findByPk(recipeId);
+
+    const userFavorite = await Favorite.findOne({
+      where: {
+        user_id: user.userId,
+        recipe_id: recipe.recipeId
+      }
+    });
+
+    const recipeFavorite = await Favorite.findOne({
+      where: {
+        user_id: recipe.recipeId,
+        recipe_id: user.userId
+      }
+    });
+
+    if (!userFavorite) {
+      return res.json({ message: 'Favorite not found' });
+    }
+
+    await userFavorite.destroy();
+
+    if (recipeFavorite) {
+      await recipeFavorite.destroy();
+    }
+
+    await user.removeRecipe(recipe);
+
+    res.json({ message: 'Favorite removed' });
 
   } catch (error) {
     console.error(error);

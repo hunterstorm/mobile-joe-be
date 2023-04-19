@@ -1,3 +1,10 @@
+AWS S3 access key for image storing
+
+AKIATYDAXPPCTH6XDZNR
+
+secret access key:
+
+tXFSUv8yyx3e4p3JVdx58TPcN1w/7oGRL9j7GKmZ
 
 API requests:
 
@@ -565,4 +572,82 @@ USER TABLE
 
 				stored as:
 					does not exist
+
+
+FAVORITES TABLE
+
+	type GET	path:  '/Favorites/user/:userId' :
+
+	this request will return an array of user's favorite recipes
+
+		example:	path: '/Favorites/user/1
+
+			return:
+				[
+    				{
+        				"recipeName": "chili egg pancakes",
+        				"recipeType": "breakfast",
+        				"description": "lorem IPSUM",
+        				"owner": 1,
+        				"recipeId": 2
+    				}
+				]
+
+	
+
+	type GET 	path:  '/Favorites/recipe/:recipeId' :
+
+	this request will return an array of user favorites by recipe
+
+			example:	path: '/Favorites/recipe/2
+
+			return:
+				[
+    				{
+        				"userId": 1,
+        				"username": "hunterstorm",
+        				"firstName": "hunter",
+        				"lastName": "reese",
+        				"favorites": {
+            				"user_id": 1,
+            				"recipe_id": 1
+        				}
+    				}
+				]
+
+
+	type PUT 	path:	'/Favorites/user/:userId/recipe/:recipeId' :
+
+	this request will add recipe as favorite per user
+
+		example:	path: '/Favorites/user/1/recipe/1
+
+		stored as:
+				[
+					{
+					    "recipeName": "chili egg pancakes",
+        				"recipeType": "breakfast",
+        				"description": "lorem IPSUM",
+        				"owner": 1,
+        				"recipeId": 2	
+					},
+					{
+					    "recipeName": "chocolate chip pancakes",
+        				"recipeType": "breakfast",
+        				"description": "lorem IPSUM",
+        				"owner": 1,
+        				"recipeId": 1	
+					}
+				]
+
+
+	type DELETE		path: '/Favorites/user/:userId/recipe/:recipeId :
+
+			this request will delete a favorite association for user and recipe
+	
+			example: DELETE 	path: '/Favorites/user/1/recipe/2'
+
+				stored as:
+					does not exist
+
 			

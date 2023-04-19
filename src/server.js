@@ -13,6 +13,7 @@ const recipeRoute = require ('./routes/Recipes');
 const ingredientRoute = require ('./routes/Ingredients');
 const recipeIngredientRoute = require ('./routes/RecipeIngredients');
 const favoriteRoute = require ('./routes/Favorites');
+const retrieveImageRoute = require ('./routes/retrieveImage');
 
 // model variables
 const User = require('./models/User');
@@ -26,11 +27,15 @@ const Favorite = require('./models/Favorite');
 app.use(express.json());
 app.use(cors());
 
+//sequelize routes
 app.use('/Users', userRoute);
 app.use('/Recipes', recipeRoute);
 app.use('/Ingredients', ingredientRoute);
 app.use('/RecipeIngredients', recipeIngredientRoute);
 app.use('/Favorites', favoriteRoute);
+
+// AWS S3 route
+app.use('/Images', retrieveImageRoute);
 
 // table associations
 User.hasMany(Recipe,{
