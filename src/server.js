@@ -13,7 +13,7 @@ const recipeRoute = require ('./routes/Recipes');
 const ingredientRoute = require ('./routes/Ingredients');
 const recipeIngredientRoute = require ('./routes/RecipeIngredients');
 const favoriteRoute = require ('./routes/Favorites');
-const retrieveImageRoute = require ('./routes/retrieveImage');
+const retrieveImageRoute = require ('./routes/RetrieveImage');
 
 // model variables
 const User = require('./models/User');
@@ -77,6 +77,6 @@ sequelize.sync().then(()=>{
 })
 
 const server = http.createServer(app);
-server.listen(3000, '127.0.0.1',()=>{
+server.listen(443,'https://mellow-pudding-3736e5.netlify.app',()=>{
     console.log('server started');
 })
