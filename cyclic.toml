@@ -1,3 +1,0 @@
-[run]
-command = "NODE_ENV=production DATABASE_URL=postgres://hunterstorm:DigitalCrafts@cloud-database-instance.ccpqgrq3czty.us-west-2.rds.amazonaws.com:5432/cloud_database npm start"
-port = 3000
