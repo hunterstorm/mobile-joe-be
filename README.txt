@@ -1,10 +1,4 @@
-AWS S3 access key for image storing
 
-AKIATYDAXPPCTH6XDZNR
-
-secret access key:
-
-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
 
 API requests:
 
