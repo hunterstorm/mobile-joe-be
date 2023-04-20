@@ -77,6 +77,6 @@ sequelize.sync().then(()=>{
 })
 
 const server = http.createServer(app);
-server.listen(8080,()=>{
+server.listen(8080, '34.210.179.63', ()=>{
     console.log('server started');
 })
