@@ -56,7 +56,7 @@ router.get('/type/:ingredient_type', (req,res)=>{
 router.post('/',(req,res)=>{
 
     const ingredientData = req.body;
-    Ingredient.findOne({ where: { ingredientName: ingredientData.ingredientName } })
+    Ingredient.findOne({ where: { ingredient_name: ingredientData.ingredientName } })
     .then(exists =>{
         if(exists){
             res.status(404).send(`Ingredient '${ingredientData.ingredientName}' already exists`);
