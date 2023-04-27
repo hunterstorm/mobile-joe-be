@@ -26,9 +26,9 @@ const Favorite = require('./models/Favorite');
 
 
 // middleware functions
+app.use(cors());
 app.use(apiAuth);
 app.use(express.json());
-app.use(cors());
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 } // set the maximum file size to 50MB
   }));
