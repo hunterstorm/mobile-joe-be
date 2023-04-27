@@ -22,7 +22,11 @@ const Recipe = sequelize.define("recipes",{
     description: {
         type: DataTypes.TEXT,
         field: 'description'
-    }
+    },
+    imageName: {
+        type: DataTypes.STRING,
+        field: "image_name"
+    } 
     // favorites: {
     //     type: DataTypes.ARRAY(DataTypes.INTEGER),
     //     defaultValue: []
