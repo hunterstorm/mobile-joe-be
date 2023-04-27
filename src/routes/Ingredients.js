@@ -78,7 +78,7 @@ router.post('/',(req,res)=>{
             });
         } 
     }).catch(error => {
-        res.status(500).send(`Error finding ingredient: ${error.message}`);
+        res.status(500).send(`Internal Server Error': ${error.message}`);
     });
 });
 

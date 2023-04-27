@@ -99,7 +99,8 @@ router.post('/', [
                 recipeType: recipeData.recipeType,
                 owner: recipeData.owner,
                 description: recipeData.description,    
-                favorite: recipeData.favorites
+                favorite: recipeData.favorites,
+                imageName: recipeData.imageName
             }).then(recipe => {
                 linkIngredients(recipeData, recipe).then(() => {
                     res.status(201).send("Recipe created successfully");
@@ -129,7 +130,8 @@ router.put('/id/:recipe_id', (req,res)=>{
             ingredientList: recipeData.ingredientList,
             description: recipeData.description,
             owner: recipeData.owner,
-            favorites: recipeData.favorites
+            favorites: recipeData.favorites,
+            imageName: recipeData.imageName
         },{
             where:{recipe_id:id}
         })

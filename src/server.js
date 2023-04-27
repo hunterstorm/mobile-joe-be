@@ -9,6 +9,7 @@ const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
 // router variables
+const apiAuth = require('./routes/apiAuth')
 const userRoute = require ('./routes/Users');
 const recipeRoute = require ('./routes/Recipes');
 const ingredientRoute = require ('./routes/Ingredients');
@@ -25,6 +26,7 @@ const Favorite = require('./models/Favorite');
 
 
 // middleware functions
+app.use(apiAuth);
 app.use(express.json());
 app.use(cors());
 app.use(fileUpload({
