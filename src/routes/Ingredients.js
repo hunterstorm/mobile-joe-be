@@ -65,20 +65,10 @@ router.post('/',(req,res)=>{
             Ingredient.create({ 
             ingredientName: ingredientData.ingredientName,
             ingredientType: ingredientData.ingredientType 
-            }).then(ingredient => {
-                if (ingredientData.recipes && ingredientData.recipes.length > 0) {
-                    ingredient.setRecipes(ingredientData.recipes).then(() => {
-                        res.status(201).send(`Ingredient '${ingredientData.ingredientName}' created successfully`);
-                    });
-                } else {
-                    res.status(201).send("Ingredient created successfully");
-                }
             }).catch(error => {
                 res.status(500).send(`Error creating ingredient: ${error.message}`);
             });
-        } 
-    }).catch(error => {
-        res.status(500).send(`Internal Server Error': ${error.message}`);
+        }
     });
 });
 
