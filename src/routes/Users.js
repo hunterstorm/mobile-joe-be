@@ -115,7 +115,7 @@ router.post('/', [
         firstName: userData.firstName,
         lastName: userData.lastName
     }).then(() => {
-        res.status(201).send("User created successfully");
+        res.status(201).json({ message: 'user created successfully' });
     }).catch(error => {
         res.status(500).send(`Error creating user: ${error.message}`);
     });
