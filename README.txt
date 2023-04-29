@@ -643,9 +643,10 @@ FAVORITES TABLE
 
 				stored as:
 					does not exist
-
-
-
+					
+					
+					
+					
 Images Bucket
 
 	type GET  path: '/Images/:imageName'
@@ -655,7 +656,6 @@ Images Bucket
 			example:	path: '/Images/avo-hash-stack.jpg' :
 
 			returns an image of avocado hash stack breakfast from S3 object bucket
-
 
 
 			
