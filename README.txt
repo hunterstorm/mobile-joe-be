@@ -643,5 +643,19 @@ FAVORITES TABLE
 
 				stored as:
 					does not exist
+					
+					
+					
+					
+Images Bucket
+
+	type GET  path: '/Images/:imageName'
+
+		this request will retrieve image based on the name of the recipe in the S3 bucket.  imageName can be retrieved from it's respective recipeId
+
+			example:	path: '/Images/avo-hash-stack.jpg' :
+
+			returns an image of avocado hash stack breakfast from S3 object bucket
+
 
 			
