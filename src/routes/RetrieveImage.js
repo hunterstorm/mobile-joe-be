@@ -14,8 +14,8 @@ AWS.config.update({
 // create S3 client
 const s3 = new AWS.S3();
 
-// endpoint to get permanent S3 image URL
-router.get('/url/:key', (req, res) => {
+// endpoint to retrieve image from S3 bucket
+router.get('/:key', (req, res) => {
   const params = {
     Bucket: 'traderrecipeimages',
     Key: req.params.key // use the key from the URL params
@@ -26,6 +26,7 @@ router.get('/url/:key', (req, res) => {
       console.error(err);
       res.status(500).send('Error getting image URL');
     } else {
+     
       res.send(url);
     }
   });
