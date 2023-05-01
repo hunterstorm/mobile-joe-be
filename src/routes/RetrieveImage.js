@@ -32,6 +32,24 @@ const s3 = new AWS.S3();
 //   });
 // });
 
+// router.get('/:key', (req, res) => {
+//   const params = {
+//     Bucket: 'traderrecipeimages',
+//     Key: req.params.key // use the key from the URL params
+//   };
+
+//   s3.getObject(params, (err, data) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).send('Error retrieving image');
+//     } else {
+      
+//       const url = s3.getSignedUrl('getObject', params);
+//       res.send(url);
+//     }
+//   });
+// });
+
 router.get('/:key', (req, res) => {
   const params = {
     Bucket: 'traderrecipeimages',
@@ -43,10 +61,9 @@ router.get('/:key', (req, res) => {
       console.error(err);
       res.status(500).send('Error retrieving image');
     } else {
-      
-      const url = s3.getSignedUrl('getObject', params);
-      res.send(url);
-    }
+      res.setHeader('Content-Type', data.ContentType);
+    res.send(data.Body);
+  }
   });
 });
 
