@@ -27,7 +27,7 @@ router.get('/:key', (req, res) => {
   });
 
   // redirect the user to the presigned URL to retrieve the image
-  res.redirect(url);
+  res.send(url);
 });
 
 // endpoint to upload image to S3 bucket
@@ -46,6 +46,7 @@ router.post('/upload', (req, res) => {
     Body: file.data,
     ContentType: file.mimetype
   };
+  contentType = params.ContentType
 
   s3.putObject(params, (err, data) => {
     if (err) {
