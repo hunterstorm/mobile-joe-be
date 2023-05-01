@@ -51,6 +51,7 @@ const s3 = new AWS.S3();
 // });
 
 router.get('/:key', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
   const params = {
     Bucket: 'traderrecipeimages',
     Key: req.params.key // use the key from the URL params
