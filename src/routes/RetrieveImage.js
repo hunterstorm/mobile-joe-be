@@ -5,7 +5,7 @@ const AWS = require('aws-sdk');
 // configure AWS SDK
 AWS.config.update({
   accessKeyId: 'AKIATYDAXPPCTH6XDZNR',
-  secretAccessKey: 'YtXFSUv8yyx3e4p3JVdx58TPcN1w/7oGRL9j7GKmZ',
+  secretAccessKey: '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',
   region: 'us-west-2'
 });
 
