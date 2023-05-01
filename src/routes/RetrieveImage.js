@@ -43,9 +43,9 @@ router.get('/:key', (req, res) => {
       console.error(err);
       res.status(500).send('Error retrieving image');
     } else {
-      const imageBuffer = data.Body;
-      const dataUrl = `data:${data.ContentType};base64,${imageBuffer.toString('base64')}`;
-      res.send(dataUrl);
+      
+      const url = s3.getSignedUrl('getObject', params);
+      res.send(url);
     }
   });
 });
