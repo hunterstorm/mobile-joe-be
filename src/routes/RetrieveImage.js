@@ -27,7 +27,7 @@ router.get('/:key', (req, res) => {
   });
 
   // redirect the user to the presigned URL to retrieve the image
-  res.send(url);
+  res.redirect(url);
 });
 
 // endpoint to upload image to S3 bucket
