@@ -45,9 +45,6 @@ app.use('/Favorites', favoriteRoute);
 app.use('/Images', retrieveImageRoute);
 
 // table associations
-User.hasMany(Recipe,{
-    foreignKey: 'owner'
-});
 Recipe.belongsTo(User, {
     foreignKey: 'owner'
 });
@@ -64,11 +61,11 @@ Recipe.belongsToMany(User, {
 
 Recipe.belongsToMany(Ingredient, {
     through: RecipeIngredient,
-    foreignKey: 'recipe_id'
+    foreignKey: 'ingredient_id'
 });
 Ingredient.belongsToMany(Recipe, {
     through: RecipeIngredient,
-    foreignKey: 'ingredient_id'
+    foreignKey: 'recipe_id'
 });
 
 // authenticating connection with the database

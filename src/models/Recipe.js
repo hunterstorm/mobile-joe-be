@@ -27,10 +27,7 @@ const Recipe = sequelize.define("recipes",{
         type: DataTypes.STRING,
         field: "image_name"
     } 
-    // favorites: {
-    //     type: DataTypes.ARRAY(DataTypes.INTEGER),
-    //     defaultValue: []
-    // }
+
 })
 
 module.exports = Recipe;
