@@ -18,7 +18,7 @@ router.get('/user/:userId', async (req, res) => {
       through: {
         model: Favorite
       },
-      attributes:[ 'recipeName', 'recipeType', 'description', 'owner','recipeId']
+      attributes:[ 'recipeName', 'recipeType', 'description', 'owner','recipeId','imageName']
     });
 
     res.json(favorites);
